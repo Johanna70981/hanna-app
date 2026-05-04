@@ -1,4 +1,4 @@
-export default async function handler(req: any, res: any) {
+export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.status(405).end();
     return;
@@ -15,8 +15,8 @@ export default async function handler(req: any, res: any) {
 `;
 
   try {
-    const token = (globalThis as any).process?.env?.LINE_CHANNEL_ACCESS_TOKEN;
-    const userId = (globalThis as any).process?.env?.LINE_USER_ID;
+    const token = process.env.LINE_CHANNEL_ACCESS_TOKEN;
+    const userId = process.env.LINE_USER_ID;
 
     await fetch("https://api.line.me/v2/bot/message/push", {
       method: "POST",
