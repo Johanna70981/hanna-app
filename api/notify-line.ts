@@ -1,5 +1,3 @@
-/// <reference types="node" />
-
 export default async function handler(req: any, res: any) {
   if (req.method !== "POST") {
     res.status(405).end();
@@ -17,14 +15,17 @@ export default async function handler(req: any, res: any) {
 `;
 
   try {
+    const token = (globalThis as any).process?.env?.LINE_CHANNEL_ACCESS_TOKEN;
+    const userId = (globalThis as any).process?.env?.LINE_USER_ID;
+
     await fetch("https://api.line.me/v2/bot/message/push", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${(process as any).env.LINE_CHANNEL_ACCESS_TOKEN}`
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify({
-        to: (process as any).env.LINE_USER_ID,
+        to: userId,
         messages: [
           {
             type: "text",
@@ -36,8 +37,8 @@ export default async function handler(req: any, res: any) {
 
     res.status(200).json({ ok: true });
 
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ error: "LINE 發送失敗" });
   }
 }
